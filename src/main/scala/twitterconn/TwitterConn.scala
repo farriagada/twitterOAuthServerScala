@@ -14,16 +14,13 @@ import ch.megard.akka.http.cors.scaladsl.CorsDirectives._
 import ch.megard.akka.http.cors.scaladsl.settings.CorsSettings
 import com.roundeights.hasher.Implicits._
 import java.io.UnsupportedEncodingException
-
+import scala.util.parsing.json._
 import scala.concurrent.{Await, Future}
 import scala.concurrent.duration.Duration
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
-
-
 import akka.util.ByteString
 
-import scala.scalajs.js.URIUtils
 import scala.language.postfixOps
 import scala.util.{Failure, Random, Success}
 
@@ -108,21 +105,25 @@ object TwitterConn {
               """", oauth_signature_method="HMAC-SHA1", oauth_timestamp="""" + this.oauth_timestamp +
               """", oauth_version="1.0"""")
           val params = ByteString(callback)
+          var jsonRSP = "null"
           val responseFuture: Future[HttpResponse] = Http().singleRequest(HttpRequest(HttpMethods.POST, url,
             headers = List(authorization),
             entity = HttpEntity(ContentTypes.`text/plain(UTF-8)`, params)))
           responseFuture
             .onComplete {
               case Success(res) => {
-                response = res.entity.toString()
-                println("res: " + res)
-
+                val response = res._3.dataBytes.map(_.utf8String).runForeach(body => {
+                  /* We postedit the string to make it JSON Parsable */
+                  val postBody = "{"+body.replaceAll("=",":").replaceAll("&",",").replaceAll("(\\w+)", "\"$1\"")+"}"
+                  jsonRSP = postBody
+                  println(postBody)
+                })
               }
-              case Failure(_) => sys.error("something wrong")
+              case Failure(_) => sys.error("Couldn't get into api.twitter")
             }
           Await.result(responseFuture, Duration.Inf)
           //s"response: " + response + s"!"
-          complete("Response: " + response)
+          complete(HttpResponse(StatusCodes.OK, entity = HttpEntity(ContentTypes.`application/json`,  jsonRSP)))
         })
       }
     }
