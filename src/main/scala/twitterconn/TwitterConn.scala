@@ -2,7 +2,7 @@ package twitterconn
 
 
 import java.net.URLEncoder
-import java.util.{Base64, Date}
+import java.util.Base64
 
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
@@ -11,24 +11,11 @@ import akka.stream.ActorMaterializer
 import akka.http.scaladsl.server.Directives._
 import ch.megard.akka.http.cors.scaladsl.CorsDirectives._
 import ch.megard.akka.http.cors.scaladsl.settings.CorsSettings
-import com.roundeights.hasher.Implicits._
 import java.io.UnsupportedEncodingException
-import java.util.concurrent.TimeUnit
-
-import scala.concurrent.{Await, Future, TimeoutException}
+import scala.concurrent.Future
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
-
-import akka.Done
-import akka.http.scaladsl.model.StatusCodes.Redirection
-import akka.http.scaladsl.model.headers.{Cookie, HttpCookie, HttpCookiePair, HttpOrigin}
-import akka.http.scaladsl.server.RejectionError
-import akka.http.scaladsl.unmarshalling.Unmarshal
-import akka.stream.scaladsl.Source
 import akka.util.ByteString
-import akka.util.Timeout
-
-import collection.immutable.Seq
 import scala.language.postfixOps
 import scala.util.{Failure, Random, Success}
 
