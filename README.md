@@ -1,22 +1,22 @@
 # An Akka-Http Server for Twitter Sign In Implementation. 
 
-To use this, consider having a webApp written in your favourite language/framework. Personally, I developed this with an Angular 6 webApp.
+Since I spend a lot of time trying to make this Twitter Sign In Flow, I share with you this Akka-Http Scala Server. Consider having a webApp written in your favourite language/framework. Personally, I developed this with an Angular 6 App.
 
-# Step one
+## Step one
 
-From your App, call http://127.0.0.1:8081/requestToken, passing http://127.0.0.1:8081/TwitterRedirect as your Callback URL parameter. The server will make connection to Twitter and get the oauth_token and oauth_token_secret for you. Then, it will respond the URL which you should use to redirect your user to authentication.
+From your App, call */requestToken*, passing http://127.0.0.1:8081/TwitterRedirect as your Callback URL parameter. The server will make connection to Twitter and get the *oauth_token* and *oauth_token_secret* for you. Then, it will respond the URL which you should use to redirect your user to authentication.
 
-# Step Two
+## Step Two
 
-After the user has successfully authenticated, Twitter will redirect to Callback URL (/TwitterRedirect), passing through the oauth_verifier and the oauth_token as parameters. The Server will then complete an html with a javascript's postMessage event, passing the verifier + token to the webApp. You should make an eventListener in your webApp, waiting for that message.
+After the user has successfully authenticated, Twitter will redirect to Callback URL (*/TwitterRedirect*), passing through the *oauth_verifier* and the *oauth_token* as parameters. The Server will then complete an HTML with a javascript's postMessage event, passing the verifier + token to the webApp. You might wanna build an eventListener in your webApp to wait for that message.
 
-# Step Three
+## Step Three
 
-After getting the message from the Server, you should parse the Verifier and the Token separately, and then calling /getAccessToken with both tokens as parameters. The Server will then use both to get the Access_Token, Access_Token_Secret, User_Id and Screen_Name and it will serve them as JSON.
+After getting the message from the Server, you should parse the *Verifier* and the *Token* separately, and then calling */getAccessToken* with both tokens as parameters. The Server will then use both to get the *Access_Token*, *Access_Token_Secret*, *User_Id* and *Screen_Name* and it will serve them as JSON.
 
-# Step Four.
+## Step Four.
 
-Parse the JSON you get and then call /verifyCredentials with the access_token and access_token_secret, to get the user info. 
+Parse the JSON you get and then call */verifyCredentials* with the access_token and access_token_secret, to get the user info. 
 
 Your App should look something like this:
 
