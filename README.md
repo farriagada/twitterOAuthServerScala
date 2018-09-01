@@ -2,6 +2,8 @@
 
 Since I spend a lot of time trying to make this Twitter Sign In Flow, I share with you this Akka-Http Scala Server. Consider having a webApp written in your favourite language/framework. Personally, I developed this with an Angular 6 App.
 
+Needless to say, don't be using this code in production. It's only for developing purposes.
+
 ## Step one
 
 From your App, call */requestToken*, passing http://127.0.0.1:8081/TwitterRedirect as your Callback URL parameter. The server will make connection to Twitter and get the *oauth_token* and *oauth_token_secret* for you. Then, it will respond the URL which you should use to redirect your user to authentication.
